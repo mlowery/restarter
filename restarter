@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# https://unix.stackexchange.com/a/146770
+
+_term() {
+    echo "restarter: caught SIGTERM signal; sending to child"
+    kill -TERM "$child" 2>/dev/null
+}
+
+_hup() {
+    echo "restarter: caught SIGHUP signal; terminating child"
+    touch restarter.lock
+    kill -TERM "$child" 2>/dev/null
+}
+
+trap _term SIGTERM
+trap _hup SIGHUP
+
+touch restarter.lock
+while [[ -f restarter.lock ]]; do
+    rm restarter.lock
+    echo "restarter: starting child"
+    "$@" &
+    child=$!
+    wait "$child"
+done
+
+# nothing below here; exit value of wait is exit value of this script

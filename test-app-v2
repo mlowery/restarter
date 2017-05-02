@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Hey $1!"
+tail -f /dev/null

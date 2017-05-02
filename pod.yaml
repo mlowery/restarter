@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: restarter-test
+spec:
+  containers:
+  - name: restarter-test
+    image: example.com/myrepo/restarter-test:latest
+    command: ["/restarter", "/test-app", "george"]
